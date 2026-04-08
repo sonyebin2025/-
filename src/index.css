@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;800&family=Space+Grotesk:wght@400;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", sans-serif;
+  --font-tech: "Space Grotesk", sans-serif;
+  
+  --color-kitsch-pink: #ff85a2;
+  --color-kitsch-purple: #b388eb;
+  --color-kitsch-blue: #8093f1;
+  --color-kitsch-yellow: #f7d08a;
+  --color-kitsch-bg: #fff0f3;
+}
+
+@layer base {
+  body {
+    @apply bg-kitsch-bg text-gray-800 font-sans cursor-[url('https://api.iconify.design/lucide:sparkles.svg?color=%23ff85a2'),_auto];
+  }
+  
+  h1, h2, h3 {
+    @apply font-display tracking-tight;
+  }
+}
+
+@layer components {
+  .sparkle-bg {
+    background-image: 
+      radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px),
+      radial-gradient(circle, rgba(255,133,162,0.2) 2px, transparent 2px);
+    background-size: 20px 20px, 40px 40px;
+    animation: sparkle 10s linear infinite;
+  }
+
+  .glass-card {
+    @apply bg-white/40 backdrop-blur-md border-2 border-white/80 rounded-[2rem] shadow-[0_8px_32px_rgba(255,133,162,0.1)];
+  }
+
+  .kitsch-button {
+    @apply px-6 py-3 bg-kitsch-pink text-white font-black rounded-full shadow-[0_4px_0_#db2777] hover:translate-y-[2px] hover:shadow-[0_2px_0_#db2777] active:translate-y-[4px] active:shadow-none transition-all duration-100 border-2 border-white/40 uppercase tracking-widest text-sm;
+  }
+}
+
+@keyframes sparkle {
+  0% { background-position: 0 0; }
+  100% { background-position: 100px 100px; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
