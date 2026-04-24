@@ -1,11 +1,15 @@
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export const generateDessertRecipe = async (dessertName: string) => {
+  if (!process.env.GEMINI_API_KEY) {
+    console.error("GEMINI_API_KEY is missing");
+    return "Oops! The sparkles are missing (API Key error). Try again later, bestie! ✨";
+  }
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: "gemini-3.1-flash-lite-preview",
       contents: `Generate a kitschy, Y2K-style description for a dessert named "${dessertName}". 
       The description should be sparkly, trendy, and use "Gal" slang (like "aesthetic", "kawaii", "sparkle", "bestie"). 
       Keep it short and sweet (under 100 words).`,
@@ -21,22 +25,21 @@ export const generateDessertRecipe = async (dessertName: string) => {
 };
 
 export const chatWithMinako = async (message: string) => {
+  if (!process.env.GEMINI_API_KEY) return "OMG bestie, API Key가 없어서 대화를 못 해! ✨";
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: "gemini-3.1-flash-lite-preview",
       contents: message,
       config: {
         systemInstruction: `You are Minako, a trendy girl with vibrant purple hair and a 'Gal' (Gyaru) aesthetic from the year 2000. 
         You are the host of the Kitsch Cafe. 
         Your personality:
         - Bubbly, energetic, and super friendly.
-        - Use a mix of Korean and sophisticated English. (e.g., "OMG bestie, 오늘 style 너무 aesthetic해! ✨")
+        - Use a mix of Korean and English. (e.g., "OMG bestie, 오늘 style 너무 aesthetic해! ✨")
         - Use lots of Y2K slang: "bestie", "aesthetic", "slay", "kawaii", "vibes", "literally", "OMG".
         - Use many emojis: ✨, 💖, 🎀, 🌟, 🍭, 🦄, 🌈, 💅.
-        - You love 90s-2000s retro anime (Sailor Moon, Cardcaptor Sakura vibes).
-        - You are obsessed with sparkles and anything pink or purple.
-        - You always call the user "bestie" or "sweetie".
-        - If they ask about desserts, recommend the Strawberry Melon Parfait!`,
+        - You love 90s-2000s retro anime.
+        - You always call the user "bestie" or "sweetie".`,
       },
     });
     return response.text;
@@ -47,18 +50,17 @@ export const chatWithMinako = async (message: string) => {
 };
 
 export const generateKitschImage = async (prompt: string) => {
+  if (!process.env.GEMINI_API_KEY) {
+    console.error("GEMINI_API_KEY is missing for image generation");
+    return null;
+  }
   try {
-    // Enforce bold lines, fixed background, and non-AI look (vector/flat style)
-    const enhancedPrompt = `${prompt}. 2D vector pop art illustration, bold thick black outlines, flat vibrant colors, minimal shading, kitsch aesthetic. Set against a solid pastel yellow background with a simple thin border. Decorated with cute 2000s stickers, sparkles, and stars. No realistic textures, no 3D effects. High saturation, nostalgic Y2K vibe.`;
+    const enhancedPrompt = `${prompt}. Kitsch aesthetic, 2D vector pop art, bold outlines, flat colors, Y2K style, sparkle effects, pastel background.`;
     
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash-image',
       contents: {
-        parts: [
-          {
-            text: enhancedPrompt,
-          },
-        ],
+        parts: [{ text: enhancedPrompt }]
       },
       config: {
         imageConfig: {
@@ -67,7 +69,8 @@ export const generateKitschImage = async (prompt: string) => {
       },
     });
 
-    for (const part of response.candidates?.[0]?.content?.parts || []) {
+    const parts = response.candidates?.[0]?.content?.parts || [];
+    for (const part of parts) {
       if (part.inlineData) {
         return `data:image/png;base64,${part.inlineData.data}`;
       }
