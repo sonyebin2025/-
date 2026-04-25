@@ -4,9 +4,9 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, Coffee, User, Menu as MenuIcon, Heart, Star, Send, ArrowLeft, FlaskConical, Plus, Trash2, Check } from 'lucide-react';
-// import { generateKitschImage, chatWithMinako } from './lib/gemini';
+import { generateKitschImage, chatWithMinako } from './lib/gemini';
 import { CafeState, Dessert, Character, FeedItem, ShopItem } from './types';
 
 const SHOP_ITEMS: ShopItem[] = [
@@ -479,7 +479,7 @@ export default function App() {
     >
       {viewTransition && <HeartBurst />}
       
-      {/* Global AI Generation Overlay */}
+      {/* Global Generation Overlay */}
       <AnimatePresence>
         {(isMixing || (isGenerating && state.currentView !== 'opening')) && (
           <motion.div 
@@ -503,10 +503,10 @@ export default function App() {
               </motion.div>
             </div>
             <div className="text-center space-y-2">
-              <h2 className="text-3xl font-black text-kitsch-pink italic uppercase tracking-tighter">AI Magic Happening...</h2>
+              <h2 className="text-3xl font-black text-kitsch-pink italic uppercase tracking-tighter">Magic Happening...</h2>
               <p className="text-kitsch-blue font-bold animate-pulse">
                 미나코 베스티가 정성껏 만들고 있어! 조금만 기다려줘... 💖✨<br/>
-                <span className="text-[10px] opacity-70 uppercase tracking-widest">(보통 10~20초 정도 걸려!)</span>
+                <span className="text-[10px] opacity-70 uppercase tracking-widest">(잠시만 기다려주세요!)</span>
               </p>
             </div>
           </motion.div>

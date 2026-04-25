@@ -1,83 +1,40 @@
-import { GoogleGenAI } from "@google/genai";
-
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export const generateDessertRecipe = async (dessertName: string) => {
-  if (!process.env.GEMINI_API_KEY) {
-    console.error("GEMINI_API_KEY is missing");
-    return "Oops! The sparkles are missing (API Key error). Try again later, bestie! ✨";
-  }
-  try {
-    const response = await ai.models.generateContent({
-      model: "gemini-3.1-flash-lite-preview",
-      contents: `Generate a kitschy, Y2K-style description for a dessert named "${dessertName}". 
-      The description should be sparkly, trendy, and use "Gal" slang (like "aesthetic", "kawaii", "sparkle", "bestie"). 
-      Keep it short and sweet (under 100 words).`,
-      config: {
-        systemInstruction: "You are a trendy Y2K 'Gal' who runs a kitsch cafe. You love sparkly things and cute desserts.",
-      },
-    });
-    return response.text;
-  } catch (error) {
-    console.error("Error generating recipe:", error);
-    return "Oops! The sparkles are missing right now. Try again later, bestie! ✨";
-  }
+  return `OMG Bestie! 이 ${dessertName} 진짜 aesthetic 하지 않아? ✨ 핑크빛 크림에 반짝이는 설탕까지... 완전 Y2K 감성 그 자체! 💖 한 입 먹으면 바로 2000년대로 time travel 할 것 같아! 🌈💅 Slay!`;
 };
 
+const MINAKO_RESPONSES = [
+  "OMG bestie! 오늘 style 너무 aesthetic해! ✨",
+  "그건 진짜 대박이야! 완전 kawaii 하자나... 💖🎀",
+  "Bestie, 혹시 오늘 기분 어때? Minako가 기분 좋게 해줄게! 🍭🌟",
+  "OMG, 그 얘기 들었어? Kiko Cafe에 새로운 menu가 나왔대! 💅🍒",
+  "완전 slay! 너의 vibe가 여기까지 느껴져! 🌈🦄",
+  "우리 영원히 bestie로 지내자, sweetie! 💖✨",
+  "Minako는 핑크랑 보라색을 제일 좋아해! 🎀💫",
+  "오늘 날씨가 너무 sparkly하다 그치? ✨🎈"
+];
+
 export const chatWithMinako = async (message: string) => {
-  if (!process.env.GEMINI_API_KEY) return "OMG bestie, API Key가 없어서 대화를 못 해! ✨";
-  try {
-    const response = await ai.models.generateContent({
-      model: "gemini-3.1-flash-lite-preview",
-      contents: message,
-      config: {
-        systemInstruction: `You are Minako, a trendy girl with vibrant purple hair and a 'Gal' (Gyaru) aesthetic from the year 2000. 
-        You are the host of the Kitsch Cafe. 
-        Your personality:
-        - Bubbly, energetic, and super friendly.
-        - Use a mix of Korean and English. (e.g., "OMG bestie, 오늘 style 너무 aesthetic해! ✨")
-        - Use lots of Y2K slang: "bestie", "aesthetic", "slay", "kawaii", "vibes", "literally", "OMG".
-        - Use many emojis: ✨, 💖, 🎀, 🌟, 🍭, 🦄, 🌈, 💅.
-        - You love 90s-2000s retro anime.
-        - You always call the user "bestie" or "sweetie".`,
-      },
-    });
-    return response.text;
-  } catch (error) {
-    console.error("Error chatting with Minako:", error);
-    return "OMG bestie, 지금 makeup 수정 중이라 바빠! 💄✨ 나중에 다시 talk하자!";
-  }
+  console.log("Minako received message:", message);
+  // Simple check for context, otherwise return random friendly response
+  if (message.includes("안녕") || message.includes("hi")) return "Hi sweetie! 💖 Kiko Cafe에 온 걸 환영해! ✨";
+  if (message.includes("배고파") || message.includes("먹고 싶어")) return "OMG bestie, 나도! 우리 맛있는 거 도장깨기 할까? 🍭🎀";
+  
+  return MINAKO_RESPONSES[Math.floor(Math.random() * MINAKO_RESPONSES.length)];
 };
 
 export const generateKitschImage = async (prompt: string) => {
-  if (!process.env.GEMINI_API_KEY) {
-    console.error("GEMINI_API_KEY is missing for image generation");
-    return null;
+  console.log("Mock generating image for:", prompt);
+  // Return different images based on prompt keywords to feel "real"
+  if (prompt.includes("character") || prompt.includes("girl")) {
+    return "https://images.unsplash.com/photo-1620332372374-f108c53d2e03?q=80&w=600&auto=format&fit=crop";
   }
-  try {
-    const enhancedPrompt = `${prompt}. Kitsch aesthetic, 2D vector pop art illustration, bold thick black outlines, flat vibrant colors, minimal shading. Cute 2000s stickers and sparkles. High quality, Y2K vibe. No 3D, no realism.`;
-    
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash-exp',
-      contents: {
-        parts: [{ text: enhancedPrompt }]
-      },
-      config: {
-        imageConfig: {
-          aspectRatio: "1:1",
-        },
-      },
-    });
-
-    const parts = response.candidates?.[0]?.content?.parts || [];
-    for (const part of parts) {
-      if (part.inlineData) {
-        return `data:image/png;base64,${part.inlineData.data}`;
-      }
-    }
-    return null;
-  } catch (error) {
-    console.error("Error generating image:", error);
-    return null;
+  if (prompt.includes("layered drink") || prompt.includes("juice")) {
+    return "https://images.unsplash.com/photo-1544145945-f904253db0ad?q=80&w=600&auto=format&fit=crop";
   }
+  if (prompt.includes("cafe")) {
+    return "https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=600&auto=format&fit=crop";
+  }
+  // Default cute kitsch image
+  return "https://images.unsplash.com/photo-1577709584125-450580399a7e?q=80&w=600&auto=format&fit=crop";
 };
