@@ -885,56 +885,87 @@ export default function App() {
               key="splash"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[200] bg-kitsch-pink flex flex-col items-center justify-center p-6 text-center"
+              exit={{ opacity: 0, scale: 1.1, filter: 'blur(10px)' }}
+              className="fixed inset-0 z-[200] bg-kitsch-pink flex flex-col items-center justify-center p-6 overflow-hidden"
               style={{
                 backgroundImage: `
-                  radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.2) 0%, transparent 20%),
-                  radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.2) 0%, transparent 20%)
-                `
+                  linear-gradient(45deg, #f472b6 25%, transparent 25%), 
+                  linear-gradient(-45deg, #f472b6 25%, transparent 25%), 
+                  linear-gradient(45deg, transparent 75%, #f472b6 75%), 
+                  linear-gradient(-45deg, transparent 75%, #f472b6 75%)
+                `,
+                backgroundSize: '40px 40px',
+                backgroundColor: '#fb923c10' // Slight tint
               }}
             >
+              {/* Floating Decoration Background */}
+              <div className="absolute inset-0 opacity-20 pointer-events-none">
+                {[...Array(20)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ x: Math.random() * 100 + '%', y: Math.random() * 100 + '%' }}
+                    animate={{ 
+                      y: [null, '-100vh'],
+                      rotate: [0, 360] 
+                    }}
+                    transition={{ 
+                      duration: 10 + Math.random() * 20, 
+                      repeat: Infinity, 
+                      ease: "linear" 
+                    }}
+                    className="absolute text-4xl"
+                    style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%` }}
+                  >
+                    {['🌸', '✨', '🍒', '🎀', '🍭'][i % 5]}
+                  </motion.div>
+                ))}
+              </div>
+
               <motion.div
-                initial={{ scale: 0.8, y: 20 }}
-                animate={{ scale: 1, y: 0 }}
-                className="space-y-12"
+                initial={{ scale: 0.5, opacity: 0, rotate: -10 }}
+                animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                transition={{ type: "spring", damping: 12 }}
+                className="relative z-10 p-12 bg-white rounded-[3rem] shadow-[0_20px_0_#db2777] border-8 border-kitsch-yellow flex flex-col items-center space-y-8"
               >
                 <div className="relative">
-                  <motion.div
-                    animate={{ rotate: [0, 5, -5, 0] }}
-                    transition={{ duration: 4, repeat: Infinity }}
-                  >
-                    <h1 className="text-8xl md:text-[10rem] font-black text-white italic tracking-tighter drop-shadow-[0_10px_0_rgba(219,39,119,1)] leading-none">
-                      KIKO<br/>CAFE
-                    </h1>
-                  </motion.div>
-                  <motion.div 
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ repeat: Infinity, duration: 2 }}
-                    className="absolute -top-10 -right-10 text-6xl"
-                  >
-                    ✨
-                  </motion.div>
+                  <div className="absolute -top-16 -left-16 w-32 h-32 bg-kitsch-blue rounded-full flex items-center justify-center text-white font-black italic -rotate-12 border-4 border-white shadow-lg text-xl uppercase tracking-tighter">
+                    NEW! <br/> 2000s
+                  </div>
+                  
+                  <h1 className="text-7xl md:text-9xl font-black text-kitsch-pink italic tracking-tighter leading-none text-center drop-shadow-sm">
+                    KIKO<br/>
+                    <span className="text-kitsch-purple">CAFE</span>
+                  </h1>
+                  
+                  <div className="mt-4 flex justify-center gap-2">
+                    {[1,2,3,4,5].map(i => <Star key={i} size={24} className="text-kitsch-yellow fill-kitsch-yellow" />)}
+                  </div>
                 </div>
+
+                <div className="w-full h-1 bg-gray-100 rounded-full" />
 
                 <button 
                   onClick={() => changeView('opening')}
-                  className="group relative px-16 py-6"
+                  className="kitsch-button px-20 py-8 text-4xl active:scale-95 shadow-[0_10px_0_#be185d]"
                 >
-                  <div className="absolute inset-0 bg-white rounded-full translate-y-2 group-active:translate-y-0 transition-transform shadow-xl" />
-                  <div className="relative px-16 py-6 bg-kitsch-yellow rounded-full border-4 border-white font-black text-3xl text-kitsch-pink italic uppercase tracking-widest group-hover:scale-105 transition-transform group-active:scale-95">
-                    Start! ✨
-                  </div>
+                  START! ✨
                 </button>
 
-                <p className="text-white/80 font-bold uppercase tracking-[0.3em] text-xs italic">
-                  Digital Healing Lab & Cafe • Est. 2000
-                </p>
+                <div className="text-center space-y-1">
+                  <p className="text-xs font-black text-gray-400 uppercase tracking-widest italic">Warning: Extremely Aesthetic</p>
+                  <p className="text-[10px] font-bold text-kitsch-blue uppercase">© 2024 MINAKO BESTIE CORP</p>
+                </div>
               </motion.div>
 
-              {/* Decorative elements */}
-              <div className="fixed bottom-10 left-10 text-4xl animate-bounce">🎀</div>
-              <div className="fixed top-10 right-10 text-4xl animate-bounce" style={{ animationDelay: '0.5s' }}>🍭</div>
+              {/* Barcode Deco */}
+              <div className="absolute bottom-10 right-10 bg-white p-2 rounded-md shadow-sm border border-gray-200 rotate-3">
+                <div className="w-20 h-8 flex gap-0.5">
+                  {[...Array(15)].map((_, i) => (
+                    <div key={i} className="bg-black h-full" style={{ width: Math.random() > 0.5 ? '2px' : '4px' }} />
+                  ))}
+                </div>
+                <p className="text-[8px] font-mono mt-1">2000-0220-MINAKO</p>
+              </div>
             </motion.div>
           )}
 

@@ -55,10 +55,10 @@ export const generateKitschImage = async (prompt: string) => {
     return null;
   }
   try {
-    const enhancedPrompt = `${prompt}. Kitsch aesthetic, 2D vector pop art, bold outlines, flat colors, Y2K style, sparkle effects, pastel background.`;
+    const enhancedPrompt = `${prompt}. Kitsch aesthetic, 2D vector pop art illustration, bold thick black outlines, flat vibrant colors, minimal shading. Cute 2000s stickers and sparkles. High quality, Y2K vibe. No 3D, no realism.`;
     
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash-image',
+      model: 'gemini-2.0-flash-exp',
       contents: {
         parts: [{ text: enhancedPrompt }]
       },
