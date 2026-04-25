@@ -52,7 +52,7 @@ const HeartBurst = () => {
 export default function App() {
   const [viewTransition, setViewTransition] = useState(false);
   const [state, setState] = useState<CafeState>({
-    currentView: 'opening',
+    currentView: 'splash',
     selectedDessert: null,
     menuItems: [],
     feedItems: [],
@@ -214,13 +214,23 @@ export default function App() {
   };
 
   const handleGenerateInitial = async () => {
+    // Only generate if we don't have images yet
+    if (character.imageUrl && cafeImage !== "https://images.unsplash.com/photo-1554118811-1e0d58224f24") {
+      return;
+    }
+
     setIsGenerating(true);
-    const charImg = await generateKitschImage(prompts.character);
-    if (charImg) setCharacter(prev => ({ ...prev, imageUrl: charImg }));
-    
-    const cafeImg = await generateKitschImage(prompts.cafe);
-    if (cafeImg) setCafeImage(cafeImg);
-    setIsGenerating(false);
+    try {
+      const charImg = await generateKitschImage(prompts.character);
+      if (charImg) setCharacter(prev => ({ ...prev, imageUrl: charImg }));
+      
+      const cafeImg = await generateKitschImage(prompts.cafe);
+      if (cafeImg) setCafeImage(cafeImg);
+    } catch (e) {
+      console.error("Initial generation failed", e);
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const handleSendMessage = async () => {
@@ -471,7 +481,7 @@ export default function App() {
       
       {/* Global AI Generation Overlay */}
       <AnimatePresence>
-        {(isMixing || isGenerating) && (
+        {(isMixing || (isGenerating && state.currentView !== 'opening')) && (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -870,6 +880,64 @@ export default function App() {
       {/* Main Content */}
       <main className="max-w-4xl mx-auto pt-12 pb-32 px-6 relative z-10">
         <AnimatePresence mode="wait">
+          {state.currentView === 'splash' && (
+            <motion.div 
+              key="splash"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[200] bg-kitsch-pink flex flex-col items-center justify-center p-6 text-center"
+              style={{
+                backgroundImage: `
+                  radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.2) 0%, transparent 20%),
+                  radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.2) 0%, transparent 20%)
+                `
+              }}
+            >
+              <motion.div
+                initial={{ scale: 0.8, y: 20 }}
+                animate={{ scale: 1, y: 0 }}
+                className="space-y-12"
+              >
+                <div className="relative">
+                  <motion.div
+                    animate={{ rotate: [0, 5, -5, 0] }}
+                    transition={{ duration: 4, repeat: Infinity }}
+                  >
+                    <h1 className="text-8xl md:text-[10rem] font-black text-white italic tracking-tighter drop-shadow-[0_10px_0_rgba(219,39,119,1)] leading-none">
+                      KIKO<br/>CAFE
+                    </h1>
+                  </motion.div>
+                  <motion.div 
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ repeat: Infinity, duration: 2 }}
+                    className="absolute -top-10 -right-10 text-6xl"
+                  >
+                    ✨
+                  </motion.div>
+                </div>
+
+                <button 
+                  onClick={() => changeView('opening')}
+                  className="group relative px-16 py-6"
+                >
+                  <div className="absolute inset-0 bg-white rounded-full translate-y-2 group-active:translate-y-0 transition-transform shadow-xl" />
+                  <div className="relative px-16 py-6 bg-kitsch-yellow rounded-full border-4 border-white font-black text-3xl text-kitsch-pink italic uppercase tracking-widest group-hover:scale-105 transition-transform group-active:scale-95">
+                    Start! ✨
+                  </div>
+                </button>
+
+                <p className="text-white/80 font-bold uppercase tracking-[0.3em] text-xs italic">
+                  Digital Healing Lab & Cafe • Est. 2000
+                </p>
+              </motion.div>
+
+              {/* Decorative elements */}
+              <div className="fixed bottom-10 left-10 text-4xl animate-bounce">🎀</div>
+              <div className="fixed top-10 right-10 text-4xl animate-bounce" style={{ animationDelay: '0.5s' }}>🍭</div>
+            </motion.div>
+          )}
+
           {state.currentView === 'opening' && (
             <motion.div 
               key="opening"

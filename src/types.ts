@@ -53,7 +53,7 @@ export interface ShopItem {
 }
 
 export interface CafeState {
-  currentView: 'opening' | 'login' | 'cafe' | 'menu' | 'profile' | 'drinkLab' | 'garden' | 'delivery' | 'feed' | 'gallery';
+  currentView: 'splash' | 'opening' | 'login' | 'cafe' | 'menu' | 'profile' | 'drinkLab' | 'garden' | 'delivery' | 'feed' | 'gallery';
   selectedDessert: Dessert | null;
   menuItems: Dessert[];
   feedItems: FeedItem[];
