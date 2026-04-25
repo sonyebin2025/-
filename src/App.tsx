@@ -6,7 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Coffee, User, Menu as MenuIcon, Heart, Star, Send, ArrowLeft, FlaskConical, Plus, Trash2, Check } from 'lucide-react';
-import { generateKitschImage, chatWithMinako } from './lib/gemini';
+// import { generateKitschImage, chatWithMinako } from './lib/gemini';
 import { CafeState, Dessert, Character, FeedItem, ShopItem } from './types';
 
 const SHOP_ITEMS: ShopItem[] = [
